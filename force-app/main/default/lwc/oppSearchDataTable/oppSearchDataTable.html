@@ -1,0 +1,18 @@
+<template>
+    <lightning-card title="Search Opportunity" style="align-items: center;">
+      <div class="slds-m-around_medium ">
+            <lightning-input type="search" label="Search" onchange={handleSearch}></lightning-input> <br>
+                  
+                  <br>
+                  <div if:true={showMessage} class="slds-text-color_error">
+                        <p> There is no record matching your Input</p> <br>
+
+                  </div>
+                  <div style="height: 243px">
+                        <lightning-datatable key-field="Id" data={oppData} columns={columns}
+                              hide-checkbox-column="true" show-row-number-column="true" enable-infinite-loading="true">
+                        </lightning-datatable>
+                  </div>
+            </div>
+    </lightning-card>
+</template>

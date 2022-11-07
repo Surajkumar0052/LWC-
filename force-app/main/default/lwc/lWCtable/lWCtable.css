@@ -1,0 +1,78 @@
+lightning-card{
+      color: blue;
+      width: 60%;
+}
+.head{
+      margin-bottom: 10px;
+      text-decoration: underline;
+      margin-left: 10px;
+      font-weight: 700;
+      font-size: 20px;
+}
+.firstrow{
+      background-color: lightblue;
+      color: black;
+  
+}
+th{
+      text-align: left;
+      padding: 0 10px;
+      font-weight: 700;
+}
+
+lightning-combobox{
+      width: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 45px;
+}
+th,tr,td{
+      border: 1px solid white;
+      
+}
+
+table{
+      width: 95%;
+      margin: 0 6px;
+     /* display: inline-flex; */
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+  }
+
+td{
+      color: black;
+      text-align: left;
+}
+
+lightning-input {
+      width: 80%;
+    margin: 10px;
+    display: flex;
+    text-align: center;
+}
+
+.row{
+      font-weight: 700;
+}
+
+table>tbody>tr:nth-child(odd) >td{
+      background-color: rgb(215, 219, 245);
+  }
+table>tbody>tr:nth-child(even)>td{
+      background-color: white;
+}
+
+
+ .year{
+      text-align: center;
+} 
+
+lightning-button{
+    margin-left: 268px;
+    font-weight: bold;
+}
+.slds-card{
+      width: 56%;
+}

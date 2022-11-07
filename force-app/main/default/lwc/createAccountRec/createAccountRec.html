@@ -1,0 +1,15 @@
+<template>
+    <lightning-card>
+      <lightning-spinner alternative-text="Loading" size="small" if:true={loadSpinner}></lightning-spinner>
+
+      <lightning-input label="Account Id" disabled value={accountid} ></lightning-input>
+      <lightning-input label="Account Name " data-field='Name' value={objAccount.Name} onchange={handleChange}></lightning-input>
+      <lightning-input label="Industry " data-field='Industry'  value={objAccount.Industry} onchange={handleChange}></lightning-input>
+      <lightning-input label="Phone " data-field='Phone' value={objAccount.Phone} onchange={handleChange}></lightning-input>
+      <lightning-button label="Create" onclick={handleClick}></lightning-button>
+      <template if:true={showMessage}>
+        Hell
+      </template>
+      <lightning-badge label={error}></lightning-badge>
+    </lightning-card>
+</template>

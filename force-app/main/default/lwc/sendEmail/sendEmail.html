@@ -1,0 +1,12 @@
+<template>
+      <lightning-card>
+            <div class="slds-m-around_medium" style="text-decoration-color: blue;">
+                  <lightning-input label="Email" name="email" class="validate" value={args.email} required onchange={handleClick}>
+                  </lightning-input>
+                  <lightning-input label="Subject" name="subject" class="validate" value={args.subject} required onchange={handleClick}>
+                  </lightning-input> <br>
+                  <lightning-input-rich-text label="Body" name="body" value={args.body}  onchange={handleClick}></lightning-input-rich-text> <br>
+                  <lightning-button label="Send" variant="brand" onclick={handleClick}></lightning-button>
+            </div>
+      </lightning-card>
+</template>

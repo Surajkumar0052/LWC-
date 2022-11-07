@@ -1,0 +1,347 @@
+<template>
+      <lightning-spinner alternative-text="Loading" variant="brand" size="large" if:true={loadSpinner}>
+      </lightning-spinner>
+
+
+      <lightning-card title="Create Insurance Detail" class="slds-m-large_around">
+            <template if:true={showCreateRecordtable}></div>
+                  <table>
+                        <tbody>
+                              <tr>
+                                    <td>
+                                          <div class="slds-m-around_medium" if:true={InsuranceWaiverOptions.data}>
+                                                <lightning-combobox name="Insurance_Waiver__c" label="Insurance Waiver"
+                                                      data-field='Insurance_Waiver__c' class="validate"
+                                                      value={objInsurance.Insurance_Waiver__c} placeholder="Choose One"
+                                                      options={InsuranceWaiverOptions.data.values}
+                                                      onchange={handlechange} required="true">
+                                                </lightning-combobox>
+                                          </div>
+                                    </td>
+                                    <td>
+                                          <div class="slds-m-around_medium" if:true={InsuredPersonNameOptions.data}>
+                                                <lightning-combobox name="Insured_Person_Name__c"
+                                                      label="Insured Person Name" data-field='Insured_Person_Name__c'
+                                                      class="validate" value={objInsurance.Insured_Person_Name__c}
+                                                      placeholder="Select Insured Person Name"
+                                                      options={InsuredPersonNameOptions.data.values}
+                                                      onchange={handlechange} required="true">
+                                                </lightning-combobox>
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                          <div class="slds-m-around_medium">
+                                                <lightning-input type="Date" label="Insured Person Date of Birth"
+                                                      data-field='Insured_Person_Date_of_Birth__c' class="validate"
+                                                      name="Insured_Person_Date_of_Birth__c" required="true"
+                                                      placeholder="Insured Person Date of Birth"
+                                                      value={objInsurance.Insured_Person_Date_of_Birth__c}
+                                                      onchange={handlechange}>
+                                                </lightning-input>
+                                          </div>
+                                    </td>
+                                    <td>
+                                          <div class="slds-m-around_medium">
+                                                <lightning-checkbox-group name="Nominee Type" label="Nominee Type"
+                                                      required class="validate" options={options}
+                                                      value={nomineeTypeValue} onchange={handlechange}>
+                                                </lightning-checkbox-group>
+                                          </div>
+                                    </td>
+                              </tr>
+
+                              <tr>
+                                    <td>
+                                          <div class="slds-m-around_medium" if:true={NomineeNameOptions.data}>
+                                                <lightning-combobox name="Nominee_Name__c" label="Nominee Name"
+                                                      data-field='Nominee_Name__c' class="validate"
+                                                      value={objInsurance.Nominee_Name__c}
+                                                      placeholder="Select Nominee Name"
+                                                      options={NomineeNameOptions.data.values} onchange={handlechange}
+                                                      required="true">
+                                                </lightning-combobox>
+                                          </div>
+
+                                    </td>
+
+                                    <td>
+                                          <div class="slds-m-around_medium"
+                                                if:true={NomineeRelationshipTypeOptions.data}>
+                                                <lightning-combobox name="Nominee_Relationship_Type__c" class="validate"
+                                                      label="Nominee Relationship Type"
+                                                      data-field='Nominee_Relationship_Type__c'
+                                                      value={objInsurance.Nominee_Relationship_Type__c}
+                                                      placeholder="Select Nominee Relationship Type"
+                                                      options={NomineeRelationshipTypeOptions.data.values}
+                                                      onchange={handlechange} required="true">
+                                                </lightning-combobox>
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                          <div class="slds-m-around_medium" if:true={NomineeRelationshipIPOptions.data}>
+                                                <lightning-combobox name="Nominee_Relationship_with_Insured_Person__c"
+                                                      class="validate" label="Nominee Relationship with Insured Person"
+                                                      data-field='Nominee_Relationship_with_Insured_Person__c'
+                                                      value={objInsurance.Nominee_Relationship_with_Insured_Person__c}
+                                                      placeholder="Select Nominee Relationship with Insured Person"
+                                                      options={NomineeRelationshipIPOptions.data.values}
+                                                      onchange={handlechange} required="true">
+                                                </lightning-combobox>
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                          <div class="slds-m-around_medium" if:true={NomineeKYCIDTypeOptions.data}>
+                                                <lightning-combobox name="Nominee_KYC_ID_Type__c"
+                                                      label="Nominee KYC ID Type" data-field='Nominee_KYC_ID_Type__c'
+                                                      class="validate" value={objInsurance.Nominee_KYC_ID_Type__c}
+                                                      placeholder="Select Nominee KYC ID Type"
+                                                      options={NomineeKYCIDTypeOptions.data.values}
+                                                      onchange={handlechange} required="true">
+                                                </lightning-combobox>
+                                          </div>
+
+                                    </td>
+
+                              </tr>
+
+                              <tr>
+                                    <td>
+                                          <div class="slds-m-around_medium">
+                                                <lightning-input label="Nominee KYC ID No" name="Nominee_KYC_ID_No__c"
+                                                      data-field='Nominee_KYC_ID_No__c' class="validate" type="Text"
+                                                      value={objInsurance.Nominee_KYC_ID_No__c} onchange={handlechange}
+                                                      required>
+                                                </lightning-input>
+                                          </div>
+                                    </td>
+                                    <td>
+                                          <div class="slds-m-around_medium">
+                                                <lightning-input label="Nominee DOB as per KYC"
+                                                      data-field='Nominee_DOB_as_per_KYC__c'
+                                                      name="Nominee_DOB_as_per_KYC__c" class="validate" type="Date"
+                                                      value={objInsurance.Nominee_DOB_as_per_KYC__c}
+                                                      onchange={handlechange} required>
+                                                </lightning-input>
+                                          </div>
+                                    </td>
+                                    <td>
+                                          <div class="slds-m-around_medium" if:true={InsuranceRequirementOptions.data}>
+                                                <lightning-combobox name="Insurance_Requirement__c"
+                                                      data-field='Insurance_Requirement__c'
+                                                      label="Insurance Requirement" class="validate"
+                                                      value={objInsurance.Insurance_Requirement__c}
+                                                      placeholder="Select Insurance Requirement"
+                                                      options={InsuranceRequirementOptions.data.values}
+                                                      onchange={handlechange} required="true">
+                                                </lightning-combobox>
+                                          </div>
+
+                                    </td>
+                                    <td>
+                                          <div class="slds-m-around_medium"
+                                                if:true={InsuranceMedicalTestResultOptions.data}>
+                                                <lightning-combobox name="Insurance_Medical_Test_Result__c"
+                                                      class="validate" data-field='Insurance_Medical_Test_Result__c'
+                                                      label="Insurance Medical Test Result"
+                                                      value={objInsurance.Insurance_Medical_Test_Result__c}
+                                                      placeholder="Select Insurance Medical Test Result"
+                                                      options={InsuranceMedicalTestResultOptions.data.values}
+                                                      onchange={handlechange} required="true">
+                                                </lightning-combobox>
+                                          </div>
+
+                                    </td>
+                              </tr>
+
+                              <tr>
+                                    <td>
+
+                                          <div class="slds-m-around_medium">
+                                                <lightning-input type="file" class="validate"
+                                                      accept=".xlsx, .xls, .csv, .png, .doc, .docx, .pdf, .txt, .jpg"
+                                                      label="Nominee KYC Uploaded" onchange={onFileUpload}>
+                                                </lightning-input>
+                                          </div>
+                                          <template if:true={fileData}>
+                                                <div class="slds-m-around_medium">
+                                                      <p>{fileData.filename}</p>
+                                                </div>
+
+                                          </template>
+                                    </td>
+
+                              </tr>
+                        </tbody>
+
+                  </table>
+                  <div class="slds-align_absolute-center">
+                        <lightning-button variant="success" label="Save" title="Successful" onclick={handleClick}
+                              disabled={disableSaveBtn} class="slds-m-center_x-small"></lightning-button>
+                        <lightning-button label="Cancel" title="Cancel" onclick={handleCancel} if:true={showCancelBtn}> </lightning-button>
+                  </div>
+            </template>
+
+            <br> <br>
+
+            <!-- ==================================Created Record DataTable============================================================= -->
+            <div class="slds-box slds-box_xx-small" if:true={showExistingRecords}>
+                  <div class="slds-box slds-box_xx-small" if:true={existingInsuranceDetailList}>
+                        <div if:false={showCreateRecordtable}>
+                              <lightning-button class="slds-float_right" variant="brand" label="Add Insurance Detail"
+                                  title="Add Insurance Detail" onclick={addInsuranceDetail}></lightning-button>
+              
+                          </div>
+
+                        <br />
+                        <br />
+                        <div class="slds-p-bottom_xx-large">
+
+                              <div style="height:15rem;" class="slds-scrollable">
+                                    <table
+                                          class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped ">
+                                          <thead>
+                                                <tr class="slds-line-height_reset">
+
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Insurance Waiver</b>
+                                                      </th>
+
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Insured Person Name</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Insured Person Date of Birth</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Nominee Type</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Nominee Name</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Nominee Relationship Type</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Nominee Relationship with Insured Person</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Nominee KYC ID Type</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Nominee KYC ID No</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Nominee DOB as per KYC</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Insurance Requirement</b>
+                                                      </th>
+                                                      <th class=" slds-cell-wrap" scope="col">
+                                                            <b>Insurance Medical Test Result</b>
+                                                      </th>
+
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                                <template for:each={existingInsuranceDetailList} for:item="InsuranceDetail"
+                                                      for:index="index">
+                                                      <tr class="slds-hint-parent" key={InsuranceDetail.Id}>
+
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Insurance_Waiver__c}
+                                                                  </div>
+                                                            </td>
+
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Insured_Person_Name__c}
+                                                                  </div>
+                                                            </td>
+
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Insured_Person_Date_of_Birth__c}
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.nomineeType}
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Nominee_Name__c}
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Nominee_Relationship_Type__c}
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Nominee_Relationship_with_Insured_Person__c}
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Nominee_KYC_ID_Type__c}
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Nominee_KYC_ID_No__c}
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Nominee_DOB_as_per_KYC__c}
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Insurance_Requirement__c}
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        {InsuranceDetail.Insurance_Medical_Test_Result__c}
+                                                                  </div>
+                                                            </td>
+
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        <lightning-button-icon icon-name="utility:edit"
+                                                                              variant="brand" label="Edit"
+                                                                              data-id={InsuranceDetail.Id}
+                                                                              data-index={index} onclick={handleEdit}>
+                                                                        </lightning-button-icon>
+                                                                  </div>
+                                                            </td>
+                                                            <td class="slds-cell-wrap">
+                                                                  <div class="slds-text-body_small">
+                                                                        <lightning-icon style="cursor: pointer;"
+                                                                              data-index={index}
+                                                                              icon-name="action:preview"
+                                                                              alternative-text="Preview Document"
+                                                                              title="Preview Document"
+                                                                              onclick={viewUploadedFile}>
+                                                                        </lightning-icon>
+                                                                  </div>
+                                                            </td>
+                                                      </tr>
+                                                </template>
+                                          </tbody>
+                                    </table>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+
+
+      </lightning-card>
+</template>

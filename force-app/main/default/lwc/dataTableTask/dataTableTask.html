@@ -1,0 +1,17 @@
+<template>
+      <lightning-card title="Accounts" >
+            <div class="slds-m-around_medium ">
+            <lightning-input type="search" label="Search" onchange={handleSearch}></lightning-input> <br>
+                  <div if:true={showMessage} class="slds-text-color_error">
+                        <p> Sorry there is no matching record</p>
+                  </div>
+                  <br>
+                  
+                  <div style="height: 243px">
+                        <lightning-datatable key-field="Id" data={accounts} columns={columns}
+                              hide-checkbox-column="true" show-row-number-column="true" onrowaction={handleRowAction}> >
+                        </lightning-datatable>
+                  </div>
+            </div>
+      </lightning-card>
+</template>

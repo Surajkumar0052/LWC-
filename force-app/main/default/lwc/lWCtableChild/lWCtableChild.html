@@ -1,0 +1,68 @@
+<template>
+      <lightning-card title="SELECT ASSESSMENT METHOD">
+            <table>
+                  <tbody>
+                        
+                        <tr class="firstrow">
+                              <th>Income Type</th>
+                              <th>PAT</th>
+                              <th>EBITDA</th>
+                        </tr>
+
+                        <tr>
+                              <td>Total Profit</td>
+                              <td class="right">{result.sum2}</td>
+                              <td class="right">{result.sum3}</td>
+                        </tr>
+
+                        <tr>
+                              <td>Multiplier</td>
+                              <td>
+                                     <lightning-input class="input" name="firstinput" onchange={handlechange} placeholder="0.0"></lightning-input> </td>
+                              <td>
+                                     <lightning-input class="input" name="secondinput" onchange={handlechange} placeholder="0.0"></lightning-input> </td>
+                              
+                        </tr>
+
+                        <tr>
+                              <td class="row">Final considered Profit</td>
+                              <td class="right">{input.result1}</td>
+                              <td class="right">{input.result2}</td>
+                        </tr>
+
+                        <tr>
+                              <td>Months</td>
+                              <td>
+                                     <lightning-input class="input" name="thirdinput" onchange={handlechange} placeholder="0.0"></lightning-input> </td>
+                              <td>
+                                     <lightning-input class="input" name="fourthinput" onchange={handlechange} placeholder="0.0"></lightning-input> </td>
+                              
+                        </tr>
+
+                        <tr>
+                              <td class="row">Final considered GMI</td>
+                              <td class="right">{input.result3}</td>
+                              <td class="right">{input.result4}</td>
+                        </tr>
+
+                        <tr>
+                              <td>Foir</td>
+                              <td>
+                                    <lightning-input class="input" name="fifthinput" onchange={handlechange} placeholder="0.0"></lightning-input> </td>
+                              <td>
+                                     <lightning-input class="input" name="sixthinput" onchange={handlechange} placeholder="0.0"></lightning-input> </td>
+                              
+                        </tr>
+
+                        <tr>
+                              <td>Total Liabilities</td>
+                              <td class="right" >{input.result5}</td>
+                              <td class="right">{input.result6}</td>
+                        </tr>
+
+                  </tbody>
+            </table>
+            
+      </lightning-card>
+
+</template>

@@ -1,0 +1,71 @@
+<template>
+                         
+      <lightning-card >
+            
+            <h1 class="head">Profit & Loss Statement</h1>
+            <table>
+                  <tbody>
+
+                  <tr class="firstrow">
+                        <th class="year">Particulars</th>
+                        <th class="year">Note no.</th>
+                        <th class="year">Current Financial Year
+                              <lightning-combobox
+                              name="Select Year"                        
+                              value={input.value1}
+                              placeholder="Select Year"                        
+                              options={options}
+                              onchange={handleChange} ></lightning-combobox>
+                          
+                        </th>
+                                             
+                        <th class="year">Previous Financial Year
+                          <lightning-combobox
+                             name="Select Year"                           
+                             value={input.value2}
+                             placeholder="Select Year"
+                             options={options}
+                             onchange={handleChange} ></lightning-combobox>
+                        </th>
+                  </tr>
+            
+                  <tr>
+                        <td class="row">I. Continuing Operations</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                  </tr>
+            
+                  <tr>
+                        <td>Revenue from operations </td>
+                        <td><lightning-input class="input" name="firstInput" onchange={handlechange} placeholder="0.0"></lightning-input></td>
+                        <td><lightning-input class="input" name="secondInput" onchange={handlechange} placeholder="0.0"></lightning-input></td> 
+                        <td><lightning-input class="input" name="thirdInput" onchange={handlechange} placeholder="0.0"></lightning-input></td>               
+                  </tr>
+
+                  <tr>
+                        <td>II. Other Income</td>
+                        <td><lightning-input class="input" name="fourthInput" onchange={handlechange} placeholder="0.0"></lightning-input></td>
+                        <td><lightning-input class="input" name="fifthInput" onchange={handlechange} placeholder="0.0"></lightning-input></td> 
+                        <td><lightning-input class="input" name="sixthInput" onchange={handlechange} placeholder="0.0"></lightning-input></td>  
+                  </tr>
+
+                  <tr>
+                        <td class="row">III. Total Revenue
+                        
+                        </td>
+                        <td>Total : {input.sum1}</td>
+                        <td>Total : {input.sum2}</td> 
+                        <td>Total : {input.sum3}</td>  
+                  </tr>
+
+            </tbody>
+
+                </table>
+                <lightning-button variant="brand" label="Save" title="Looks like a link" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+                <br>
+
+                <c-l-w-ctable-child result={input}></c-l-w-ctable-child>
+                <!-- <c-l-w-ctable-child ebitdaresult = {sum3}></c-l-w-ctable-child> -->
+      </lightning-card>
+</template>
