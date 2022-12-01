@@ -1,0 +1,297 @@
+HTML : 
+
+<template>
+      <lightning-card title="Dependent Picklist" icon-name="custom:custom63" >
+
+            <lightning-layout multiple-rows="true">
+                  <lightning-layout-item class="slds-m-left_medium">
+                        <div class="slds-m-around_medium">
+                              <lightning-combobox name="regionValue" label="Region" value={values.regionValue} class="validate"
+                                    placeholder="Select Region" options={values.regionOptions} onchange={handleChange} required>
+                              </lightning-combobox>
+
+                        </div>
+                  </lightning-layout-item>
+
+                  <lightning-layout-item>
+                        <div class="slds-m-around_medium">
+                              <lightning-combobox name="zoneValue" label="Zone" value={values.zoneValue} class="validate"
+                                    placeholder="Select Zone" options={values.zoneOptions} onchange={handleChange} required>
+                              </lightning-combobox>
+                        </div>
+                  </lightning-layout-item>
+
+            </lightning-layout>
+            <div class="slds-m-around_medium">
+                  <lightning-button label="Save" class={values.btnClass} variant="brand" onclick={handleClick} disabled={values.disableBtn}></lightning-button>
+            </div>
+
+      </lightning-card>
+</template>
+
+
+============================================================================================================================================
+
+JS : 
+
+import { LightningElement, wire, track, api } from 'lwc';
+import { getPicklistValuesByRecordType } from 'lightning/uiObjectInfoApi';
+import Region_Field from '@salesforce/schema/Region__c.Regions__c';
+import Zone_Field from '@salesforce/schema/Region__c.Zone__c';
+import Id_Field from '@salesforce/schema/Region__c.Id';
+import Region_Object from '@salesforce/schema/Region__c.Regions__c';
+import { updateRecord } from 'lightning/uiRecordApi';
+import { getRecord } from 'lightning/uiRecordApi';
+import getFieldDependencies from '@salesforce/apex/DependentPicklistHandler.getFieldDependencies';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
+export default class DependentPickList extends LightningElement {
+      @api recordId;
+      @track values = {
+            regionValue: '',
+            zoneValue: '',
+            regionOptions: [],
+            zoneOptions: [],
+            disableBtn: true,
+            btnClass: 'btn1'
+      }
+
+      @wire(getRecord, { recordId: '$recordId', fields: [Region_Field, Zone_Field] })
+      regionRecord({ data, error }) {
+            if (data) {
+                  // console.log('getRecord : ', data);
+                  this.values.regionValue = data.fields.Regions__c.value;
+                  this.values.zoneValue = data.fields.Zone__c.value;
+            }
+            else if (error) {
+                  console.log('error : ', error);
+            }
+      }
+
+      // getDependentPickList(regionValue){
+      //       getFieldDependencies()
+      //             .then(result => {
+      //                   console.log('success');
+      //                   for (let key in result) {
+      //                         if (regionValue == key) {
+      //                               console.log('Key matched : ', result[key]);
+      //                               let arr2 = [];
+      //                               for (let val in result[key]) {
+      //                                     // console.log('Val : ', result[key][val]);
+      //                                     arr2.push({ label: result[key][val], value: result[key][val] });
+      //                               }
+      //                               this.values.zoneOptions = arr2;
+      //                               console.log('arr2 : ', arr2);
+      //                         }
+      //                   }
+      //             })
+      //             .catch(error => {
+      //                   console.log('Fetching dependency error : ', error);
+      //             })
+      // }
+
+      @wire(getPicklistValuesByRecordType, { objectApiName: Region_Object, recordTypeId: '012000000000000AAA' })
+      fetchPicklist({ error, data }) {
+            if (data && data.picklistFieldValues) {
+                  this.values.regionOptions = data.picklistFieldValues.Regions__c.values;
+                  console.log('regVal bef : ' , this.values.regionValue);
+                  getFieldDependencies()
+                  .then(result => {
+                        console.log('success');
+                        for (let key in result) {
+                              if (this.values.regionValue == key) {
+                                    console.log('Key matched : ', result[key]);
+                                    let arr2 = [];
+                                    for (let val in result[key]) {
+                                          // console.log('Val : ', result[key][val]);
+                                          arr2.push({ label: result[key][val], value: result[key][val] });
+                                    }
+                                    this.values.zoneOptions = arr2;
+                                    console.log('arr2 : ', arr2);
+                              }
+                        }
+                  })
+                  .catch(error => {
+                        console.log('Fetching dependency error : ', error);
+                  })
+                  console.log('regVal bef : ' , this.values.regionValue);
+                  
+
+            } else if (error) {
+                  console.log(error);
+            }
+      }
+
+      showToast(title, message, variant) {
+            this.dispatchEvent(
+                  new ShowToastEvent({
+                        title: title,
+                        message: message,
+                        variant: variant,
+                  }),
+            );
+      }
+
+      handleChange(event) {
+            this.values.btnClass = 'btn2';
+            this.values.disableBtn = false;
+            this.values.zoneValue = null;
+            let getDependentPicklistValues = event.target.value;
+
+            getFieldDependencies()
+                  .then(result => {
+                        console.log('success');
+                        for (let key in result) {
+                              if (getDependentPicklistValues == key) {
+                                    console.log('Key matched : ', result[key]);
+                                    let arr2 = [];
+                                    for (let val in result[key]) {
+                                          // console.log('Val : ', result[key][val]);
+                                          arr2.push({ label: result[key][val], value: result[key][val] });
+                                    }
+                                    this.values.zoneOptions = arr2;
+                                    console.log('arr2 : ', arr2);
+                              }
+                        }
+                  })
+                  .catch(error => {
+                        console.log('Fetching dependency error : ', error);
+                  })
+
+            this.values[event.target.name] = event.detail.value;
+      }
+
+      handleClick() {
+            try {
+
+                  const fields = {};
+
+                  fields[Id_Field.fieldApiName] = this.recordId;
+                  fields[Region_Field.fieldApiName] = this.values.regionValue;
+                  fields[Zone_Field.fieldApiName] = this.values.zoneValue;
+
+                  const recInput = {
+                        fields: fields
+                  };
+
+                  const isInputCorrect = [...this.template.querySelectorAll('.validate')].reduce((validSoFar, inputField) => {
+                        inputField.reportValidity();
+                        console.log('checking field validity');
+                        return validSoFar && inputField.checkValidity();
+                  }, true);
+
+                  if (isInputCorrect) {
+                        updateRecord(recInput)
+                              .then(result => {
+                                    console.log('res : ', result);
+                                    this.showToast('Success', 'Record Updated', 'success');
+                                    this.values.disableBtn = true;
+                              })
+                              .catch(error => {
+                                    console.log('Error : ', error);
+                                    this.showToast('Error', error.body.message, 'error');
+                              })
+                  }
+                  else {
+                        console.log('Field inputs are not valid ');
+                        // this.showToast('Error', 'Inputs are not valid' , 'error');
+                  }
+            }
+            catch (error) {
+                  console.log('Error in creating rec : ', error);
+                  this.showToast('Error', error.body.message, 'error');
+            }
+      }
+
+}
+
+=============================================================================================================================================\
+
+CSS : 
+
+.btn1{
+      margin-left: 125px;
+}
+.btn2{
+      margin-left: 85px;
+}
+
+
+=============================================================================================================================================
+
+APEX : 
+
+public class DependentPicklistHandler{
+    
+    public class MyPickListInfo{
+        public String validFor;
+    }
+    
+    @AuraEnabled(Cacheable=true)
+    public static Map<String, List<String>> getFieldDependencies(){
+        
+        Map<String, List<String>> controllingInfo = new Map<String, List<String>>();
+        
+        Schema.SObjectType objType = Schema.getGlobalDescribe().get('Region__c');
+        
+        Schema.DescribeSObjectResult describeResult = objType.getDescribe();
+        Schema.DescribeFieldResult controllingFieldInfo = describeResult.fields.getMap().get('Regions__c').getDescribe();
+        Schema.DescribeFieldResult dependentFieldInfo = describeResult.fields.getMap().get('Zone__c').getDescribe();
+        
+        List<Schema.PicklistEntry> controllingValues = controllingFieldInfo.getPicklistValues();
+        List<Schema.PicklistEntry> dependentValues = dependentFieldInfo.getPicklistValues();
+        
+        for(Schema.PicklistEntry currControllingValue : controllingValues){
+            System.debug('ControllingField: Label:' + currControllingValue.getLabel());
+            controllingInfo.put(currControllingValue.getLabel(), new List<String>());
+        }
+        
+        for(Schema.PicklistEntry currDependentValue : dependentValues){
+            String jsonString = JSON.serialize(currDependentValue);
+            
+            MyPickListInfo info = (MyPickListInfo) JSON.deserialize(jsonString, MyPickListInfo.class);
+            
+            String hexString = EncodingUtil.convertToHex(EncodingUtil.base64Decode(info.validFor)).toUpperCase();
+            
+            System.debug('DependentField: Label:' + currDependentValue.getLabel() + ' ValidForInHex:' + hexString + ' JsonString:' + jsonString);
+            
+            Integer baseCount = 0;
+            
+            for(Integer curr : hexString.getChars()){
+                Integer val = 0;
+                
+                if(curr >= 65){
+                    val = curr - 65 + 10;
+                }
+                else{
+                    val = curr - 48;
+                }
+                
+                if((val & 8) == 8){
+                    System.debug('Dependent Field: ' + currDependentValue.getLabel() + ' Partof ControllingField:' + controllingValues[baseCount + 0].getLabel());
+                    controllingInfo.get(controllingValues[baseCount + 0].getLabel()).add(currDependentValue.getLabel());
+                }
+                if((val & 4) == 4){
+                    System.debug('Dependent Field: ' + currDependentValue.getLabel() + ' Partof ControllingField:' + controllingValues[baseCount + 1].getLabel());
+                    controllingInfo.get(controllingValues[baseCount + 1].getLabel()).add(currDependentValue.getLabel());                    
+                }
+                if((val & 2) == 2){
+                    System.debug('Dependent Field: ' + currDependentValue.getLabel() + ' Partof ControllingField:' + controllingValues[baseCount + 2].getLabel());
+                    controllingInfo.get(controllingValues[baseCount + 2].getLabel()).add(currDependentValue.getLabel());                    
+                }
+                if((val & 1) == 1){
+                    System.debug('Dependent Field: ' + currDependentValue.getLabel() + ' Partof ControllingField:' + controllingValues[baseCount + 3].getLabel());
+                    controllingInfo.get(controllingValues[baseCount + 3].getLabel()).add(currDependentValue.getLabel());                    
+                }
+                baseCount += 4;
+            }            
+        } 
+        
+        System.debug('ControllingInfo: ' + controllingInfo);
+        
+        return controllingInfo;
+    }
+}
+
+
+

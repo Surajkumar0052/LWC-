@@ -1,0 +1,28 @@
+<template>
+      <lightning-card title="Dependent Picklist" icon-name="custom:custom63" >
+
+            <lightning-layout multiple-rows="true">
+                  <lightning-layout-item class="slds-m-left_medium">
+                        <div class="slds-m-around_medium">
+                              <lightning-combobox name="regionValue" label="Region" value={values.regionValue} class="validate"
+                                    placeholder="Select Region" options={values.regionOptions} onchange={handleChange} required>
+                              </lightning-combobox>
+
+                        </div>
+                  </lightning-layout-item>
+
+                  <lightning-layout-item>
+                        <div class="slds-m-around_medium">
+                              <lightning-combobox name="zoneValue" label="Zone" value={values.zoneValue} class="validate"
+                                    placeholder="Select Zone" options={values.zoneOptions} onchange={handleChange} required>
+                              </lightning-combobox>
+                        </div>
+                  </lightning-layout-item>
+
+            </lightning-layout>
+            <div class="slds-m-around_medium">
+                  <lightning-button label="Save" class={values.btnClass} variant="brand" onclick={handleClick} disabled={values.disableBtn}></lightning-button>
+            </div>
+
+      </lightning-card>
+</template>

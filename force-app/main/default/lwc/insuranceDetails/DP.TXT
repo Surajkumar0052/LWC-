@@ -1,0 +1,193 @@
+HTML : 
+
+<template>
+      <lightning-card title="Dependent Picklist" icon-name="custom:custom63">
+
+            <lightning-layout multiple-rows="true">
+                  <lightning-layout-item>
+                        <div class="slds-m-around_medium">
+
+                              <lightning-combobox name="regionValue" label="Region" value={variables.regionValue} 
+                                    placeholder="Select Region" options={variables.regionOptions} onchange={handleChange}>
+                              </lightning-combobox>
+
+                        </div>
+                  </lightning-layout-item>
+
+                  <lightning-layout-item>
+                        <div class="slds-m-around_medium">
+                              <lightning-combobox name="zoneValue" label="Zone" value={variables.zoneValue} 
+                                    placeholder="Select Zone" options={variables.zoneOptions} onchange={handleChange}>
+                              </lightning-combobox>
+                        </div>
+                  </lightning-layout-item>
+
+            </lightning-layout>
+            <div class="slds-m-around_medium">
+                  <lightning-button label="Save" onclick={handleClick}></lightning-button>
+            </div>
+
+      </lightning-card>
+</template>
+
+
+============================================================================================================================================
+
+JS : 
+
+import { LightningElement, wire, track } from 'lwc';
+import { getPicklistValuesByRecordType } from 'lightning/uiObjectInfoApi';
+import Region_Field from '@salesforce/schema/Region__c.Regions__c';
+import Zone_Field from '@salesforce/schema/Region__c.Zone__c';
+import Region_Object from '@salesforce/schema/Region__c.Regions__c';
+import { createRecord } from 'lightning/uiRecordApi';
+import getFieldDependencies from '@salesforce/apex/DependentPicklistHandler.getFieldDependencies';
+
+export default class DependentPickList extends LightningElement {
+      @track variables = {
+            regionValue: '',
+            zoneValue: '',
+            regionOptions : [],
+            zoneOptions : []            
+      }
+
+      @wire(getPicklistValuesByRecordType, { objectApiName: Region_Object, recordTypeId: '012000000000000AAA' })
+      fetchPicklist({ error, data }) {
+            if (data && data.picklistFieldValues) {
+                  console.log('Data : ', data.picklistFieldValues.Regions__c.values);
+                  this.variables.regionOptions = data.picklistFieldValues.Regions__c.values;
+
+            } else if (error) {
+                  console.log(error);
+            }
+      }
+
+
+      handleChange(event) {
+            console.log('values after : ', this.variables);
+            console.log('target value : ' , event.target.value);
+            let getDependentPicklistValues = event.target.value;
+            getFieldDependencies()
+                  .then(result=>{
+                        this.data = result;
+                        for(let key in result){
+                              if(getDependentPicklistValues == key){
+                                    console.log('Key matched : ' , result[key]);
+                                    let arr2 = [];
+                                    for(let val in result[key]){
+                                          console.log('Val : ' , result[key][val] );
+                                          arr2.push({label : result[key][val], value : result[key][val]});
+                                    }
+                                    this.variables.zoneOptions = arr2;
+                                    console.log('arr2 : ' , arr2);
+                              }
+                        }
+                  })
+
+            
+            this.variables[event.target.name] = event.detail.value;
+      }
+
+
+      handleClick() {
+                  const fields = {};
+
+                  fields[Region_Field.fieldApiName] = this.variables.regionValue;
+                  fields[Zone_Field.fieldApiName] = this.variables.zoneValue;
+
+                  const recInput = {
+                        apiName: Region_Object.objectApiName,
+                        fields: fields
+                  };
+
+                        createRecord(recInput)
+                              .then(result => {
+                                    console.log('res : ', result);
+                              })
+                              .catch(error => {
+                                    console.log('Error : ', error);
+                              })
+                  
+            
+      }
+
+}
+
+
+=============================================================================================================================================
+
+APEX : 
+
+public class DependentPicklistHandler{
+    
+    public class MyPickListInfo{
+        public String validFor;
+    }
+    
+    @AuraEnabled(Cacheable=true)
+    public static Map<String, List<String>> getFieldDependencies(){
+        
+        Map<String, List<String>> controllingInfo = new Map<String, List<String>>();
+        
+        Schema.SObjectType objType = Schema.getGlobalDescribe().get('Region__c');
+        
+        Schema.DescribeSObjectResult describeResult = objType.getDescribe();
+        Schema.DescribeFieldResult controllingFieldInfo = describeResult.fields.getMap().get('Regions__c').getDescribe();
+        Schema.DescribeFieldResult dependentFieldInfo = describeResult.fields.getMap().get('Zone__c').getDescribe();
+        
+        List<Schema.PicklistEntry> controllingValues = controllingFieldInfo.getPicklistValues();
+        List<Schema.PicklistEntry> dependentValues = dependentFieldInfo.getPicklistValues();
+        
+        for(Schema.PicklistEntry currControllingValue : controllingValues){
+            System.debug('ControllingField: Label:' + currControllingValue.getLabel());
+            controllingInfo.put(currControllingValue.getLabel(), new List<String>());
+        }
+        
+        for(Schema.PicklistEntry currDependentValue : dependentValues){
+            String jsonString = JSON.serialize(currDependentValue);
+            
+            MyPickListInfo info = (MyPickListInfo) JSON.deserialize(jsonString, MyPickListInfo.class);
+            
+            String hexString = EncodingUtil.convertToHex(EncodingUtil.base64Decode(info.validFor)).toUpperCase();
+            
+            System.debug('DependentField: Label:' + currDependentValue.getLabel() + ' ValidForInHex:' + hexString + ' JsonString:' + jsonString);
+            
+            Integer baseCount = 0;
+            
+            for(Integer curr : hexString.getChars()){
+                Integer val = 0;
+                
+                if(curr >= 65){
+                    val = curr - 65 + 10;
+                }
+                else{
+                    val = curr - 48;
+                }
+                
+                if((val & 8) == 8){
+                    System.debug('Dependent Field: ' + currDependentValue.getLabel() + ' Partof ControllingField:' + controllingValues[baseCount + 0].getLabel());
+                    controllingInfo.get(controllingValues[baseCount + 0].getLabel()).add(currDependentValue.getLabel());
+                }
+                if((val & 4) == 4){
+                    System.debug('Dependent Field: ' + currDependentValue.getLabel() + ' Partof ControllingField:' + controllingValues[baseCount + 1].getLabel());
+                    controllingInfo.get(controllingValues[baseCount + 1].getLabel()).add(currDependentValue.getLabel());                    
+                }
+                if((val & 2) == 2){
+                    System.debug('Dependent Field: ' + currDependentValue.getLabel() + ' Partof ControllingField:' + controllingValues[baseCount + 2].getLabel());
+                    controllingInfo.get(controllingValues[baseCount + 2].getLabel()).add(currDependentValue.getLabel());                    
+                }
+                if((val & 1) == 1){
+                    System.debug('Dependent Field: ' + currDependentValue.getLabel() + ' Partof ControllingField:' + controllingValues[baseCount + 3].getLabel());
+                    controllingInfo.get(controllingValues[baseCount + 3].getLabel()).add(currDependentValue.getLabel());                    
+                }
+                baseCount += 4;
+            }            
+        } 
+        
+        System.debug('ControllingInfo: ' + controllingInfo);
+        
+        return controllingInfo;
+    }
+}
+
+

@@ -1,0 +1,19 @@
+<template>
+      <lightning-card>
+            <lightning-record-edit-form record-id={recordId} object-api-name="Region__c"
+                                        onsuccess={handleSuccess} onerror={handleError}>
+                  <div class="slds-m-around_medium">
+                        <lightning-input-field field-name="Regions__c"></lightning-input-field>
+                  </div>
+
+                  <div class="slds-m-around_medium">
+                        <lightning-input-field field-name="Zone__c"></lightning-input-field>
+                  </div>
+
+                  <div class="slds-m-around_medium">
+                        <lightning-button type="submit" label="Save"></lightning-button>
+                  </div>
+
+            </lightning-record-edit-form>
+      </lightning-card>
+</template>

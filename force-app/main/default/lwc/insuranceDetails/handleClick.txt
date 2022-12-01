@@ -1,0 +1,41 @@
+handleClick() {
+            try {
+
+                  const fields = {};
+
+                  fields[Id_Field.fieldApiName] = this.recordId;
+                  fields[Region_Field.fieldApiName] = this.values.regionValue;
+                  fields[Zone_Field.fieldApiName] = this.values.zoneValue;
+
+                  const recInput = {
+                        fields: fields
+                  };
+
+                  const isInputCorrect = [...this.template.querySelectorAll('.validate')].reduce((validSoFar, inputField) => {
+                        inputField.reportValidity();
+                        console.log('checking field validity');
+                        return validSoFar && inputField.checkValidity();
+                  }, true);
+
+                  if (isInputCorrect) {
+                        updateRecord(recInput)
+                              .then(result => {
+                                    // console.log('res : ', result);
+                                    this.showToast('Success', 'Record Updated', 'success');
+                                    this.values.disableBtn = true;
+                              })
+                              .catch(error => {
+                                    // console.log('Error : ', error);
+                                    this.showToast('Error', error.body.message, 'error');
+                              })
+                  }
+                  else {
+                        console.log('Field inputs are not valid ');
+                        // this.showToast('Error', 'Inputs are not valid' , 'error');
+                  }
+            }
+            catch (error) {
+                  console.log('Error in creating rec : ', error);
+                  this.showToast('Error', error.body.message, 'error');
+            }
+      }

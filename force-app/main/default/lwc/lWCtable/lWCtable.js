@@ -20,8 +20,9 @@ currentYear= new Date().getFullYear();
 connectedCallback(){
       for(let i=0; i<=10; i++){
             this.options.push({label: String(this.currentYear-i ) ,value: String( this.currentYear-i )});            
-       }
+      }
        
+      console.log('options : ' , this.options);
 }
 
 handleChange(event) {

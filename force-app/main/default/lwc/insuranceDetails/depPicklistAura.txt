@@ -1,0 +1,57 @@
+Component : 
+
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" > 
+    
+    <lightning:card title="Dependent Picklist">
+        <!-- Controller Field -->
+        
+        <lightning:recordEditForm objectApiName="Region__c" onsuccess="{!c.handleSuccess}" onerror="{!c.handleError}">
+            <lightning:messages />
+            <div class="slds-grid">
+                <div class="slds-m-around_medium">
+                    <lightning:inputField fieldName="Regions__c" required="true"/>
+                </div>
+                <div class="slds-m-around_medium">
+                    <lightning:inputField fieldName="Zone__c" required="true"/>
+                </div>
+            </div>
+            <div class="btn">
+                <lightning:button class="btn" type="submit" variant="brand" label="Create new" />
+            </div>
+        </lightning:recordEditForm>
+        
+    </lightning:card>
+</aura:component>
+
+===================================================================================================================================================
+
+
+
+JS : 
+
+
+({
+    
+    handleSuccess: function(component, event, helper) {
+        console.log('clicked : ' + JSON.stringify(event));
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            title: "Success!",
+            message: "The record is created successfully.",
+            type : "Success"
+        });
+        toastEvent.fire();
+        
+    },
+    
+    handleError: function (cmp, event, helper) {
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            title: "Error!",
+            message: event.getParam("message"),
+            type : "Error"
+        });
+        toastEvent.fire();
+        
+    }
+})
